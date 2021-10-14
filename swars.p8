@@ -5,12 +5,42 @@ __lua__
 p={}
 p.x=5
 p.y=5
+
+--a list for the lasers in the game
+lasers = {}
 -->8
 --draw
 function _draw()
 	cls()
+	for o in all(objs) do o:draw() end
 	map()
 	spr(1,p.x,p.y)
+end
+
+--function for drawing objects
+function laserdraw(o)
+	spr(o.spr,o.x,o.y)
+end
+
+--moves bullest a little bit at a time
+function laserupdate(b)
+	b.x += b.dx --x moves by dx every frame
+	b.y += b.dy --y moves by dy every frame
+	b.time -= 1 --if the laser has exsited for too long, delete it
+	return b.time > 0 --returns true if still alive
+end
+
+--creates a new laser
+function newlaser(x,y,w,h,dx,dy)
+	local b = { --only use b in this function
+	x=x,y=y,dx=dx,dy=dy,
+	w=w,h=j,
+	time=60, --how long a bullet will last
+	update=laserupdate, --putting function in table
+	spr=4,draw=laserdraw
+	}
+	add(lasers,b)
+	return b --if a laser is special we can adjust it
 end
 -->8
 --update
@@ -19,6 +49,16 @@ function _update()
 	if btn(➡️) then p.x+=1 end
 	if btn(⬆️) then p.y-=1 end
 	if btn(⬇️) then p.y+=1 end
+	
+	if(btn(❎)) newlaser(p.x,p.y,4,4,0,2)
+	local i,j=1,1 --properly support deleting items
+	while(lasers[i]) do
+		if lasers[i]:update() then
+			if(i!=j) lasers[j]=lasers[i] lasers[i]=nil --shifts object if necessary
+			j+=1
+		else lasers[i]=nil end --remove lasers that have died or timed out
+			i+=1 --go to the next object
+	end
 end
 __gfx__
 0000000000000000d000000d00888800000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000
