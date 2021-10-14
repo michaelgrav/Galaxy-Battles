@@ -12,7 +12,7 @@ lasers = {}
 --draw
 function _draw()
 	cls()
-	for o in all(objs) do o:draw() end
+	for o in all(lasers) do o:draw() end
 	map()
 	spr(1,p.x,p.y)
 end
@@ -25,7 +25,7 @@ end
 --moves bullest a little bit at a time
 function laserupdate(b)
 	b.x += b.dx --x moves by dx every frame
-	b.y += b.dy --y moves by dy every frame
+	b.y -= b.dy --y moves by dy every frame
 	b.time -= 1 --if the laser has exsited for too long, delete it
 	return b.time > 0 --returns true if still alive
 end
