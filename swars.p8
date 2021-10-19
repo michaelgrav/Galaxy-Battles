@@ -5,6 +5,7 @@ __lua__
 p={}
 p.x=5
 p.y=5
+lastimer = 0
 
 --a list for the lasers in the game
 lasers = {}
@@ -45,12 +46,23 @@ end
 -->8
 --update
 function _update()
+	if lastimer > 0 then
+		lastimer -= 1 
+	else
+		lastimer = 0
+	end
+
 	if btn(⬅️) then p.x-=1 end
 	if btn(➡️) then p.x+=1 end
 	if btn(⬆️) then p.y-=1 end
 	if btn(⬇️) then p.y+=1 end
 	
-	if(btn(❎)) newlaser(p.x,p.y,4,4,0,2)
+	if(btn(❎)) then
+		if lastimer == 0 then
+			newlaser(p.x,p.y,4,4,0,2)
+			starttimer()
+		end
+	end
 	local i,j=1,1 --properly support deleting items
 	while(lasers[i]) do
 		if lasers[i]:update() then
@@ -59,6 +71,10 @@ function _update()
 		else lasers[i]=nil end --remove lasers that have died or timed out
 			i+=1 --go to the next object
 	end
+end
+
+function starttimer()
+ lastimer = 30
 end
 __gfx__
 0000000000000000d000000d00888800000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000
