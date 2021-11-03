@@ -57,12 +57,8 @@ function _update()
 	if btn(⬆️) then p.y-=1 end
 	if btn(⬇️) then p.y+=1 end
 	
-	-- handle if character moves
-	-- offscreen
-	if p.x>127 then p.x=-8 end
-	if p.x<-8 then p.x=127 end
-	if p.y>127 then p.y=-8 end
-	if p.y<-8 then p.y=127 end
+	--if character moves offscreen
+	wrap()
 	
 	if(btn(❎)) then
 		if lastimer == 0 then
@@ -82,6 +78,15 @@ end
 
 function starttimer()
  lastimer = 30
+end
+
+function wrap()
+	-- handle if character moves
+	-- offscreen
+	if p.x>127 then p.x=-8 end
+	if p.x<-8 then p.x=127 end
+	if p.y>127 then p.y=-8 end
+	if p.y<-8 then p.y=127 end
 end
 __gfx__
 0000000000000000d000000d00888800000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000
