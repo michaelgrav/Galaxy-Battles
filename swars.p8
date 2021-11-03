@@ -57,6 +57,13 @@ function _update()
 	if btn(⬆️) then p.y-=1 end
 	if btn(⬇️) then p.y+=1 end
 	
+	-- handle if character moves
+	-- offscreen
+	if p.x>127 then p.x=-8 end
+	if p.x<-8 then p.x=127 end
+	if p.y>127 then p.y=-8 end
+	if p.y<-8 then p.y=127 end
+	
 	if(btn(❎)) then
 		if lastimer == 0 then
 			newlaser(p.x,p.y,4,4,0,2)
