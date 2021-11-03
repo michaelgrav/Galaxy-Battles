@@ -61,23 +61,16 @@ function _update()
 	if btn(➡️) then p.x+=1 saniply=true end
 	if btn(⬆️) then p.y-=1 saniply=true end
 	if btn(⬇️) then p.y+=1 saniply=true end
+	if(btn(❎)) then createlas() end
 	
 	--update sprite animation
 	if saniply then 
 		shipani() 
-	else
-		s=1
-	end
+	else s=1 end
 	
 	--if character moves offscreen
 	wrap()
 	
-	if(btn(❎)) then
-		if lastimer == 0 then
-			newlaser(p.x,p.y,4,4,0,2)
-			starttimer()
-		end
-	end
 	local i,j=1,1 --properly support deleting items
 	while(lasers[i]) do
 		if lasers[i]:update() then
@@ -109,6 +102,13 @@ function shipani()
 		if s>49 then s=1 end
 		d=4
 	end
+end
+
+function createlas()
+	if lastimer == 0 then
+			newlaser(p.x,p.y,4,4,0,2)
+			starttimer()
+		end
 end
 __gfx__
 0000000000000000d000000d00888800000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000
