@@ -8,6 +8,7 @@ p.y=5
 lastimer = 0
 s=1 --sprite number
 d=4 --delay between sprite change
+saniply=false --dont play animation when still
 
 --a list for the lasers in the game
 lasers = {}
@@ -48,8 +49,7 @@ end
 -->8
 --update
 function _update()
-	--update sprite animation
-	shipani()
+	saniply=false
 	
 	if lastimer > 0 then
 		lastimer -= 1 
@@ -57,10 +57,17 @@ function _update()
 		lastimer = 0
 	end
 
-	if btn(⬅️) then p.x-=1 end
-	if btn(➡️) then p.x+=1 end
-	if btn(⬆️) then p.y-=1 end
-	if btn(⬇️) then p.y+=1 end
+	if btn(⬅️) then p.x-=1 saniply=true end
+	if btn(➡️) then p.x+=1 saniply=true end
+	if btn(⬆️) then p.y-=1 saniply=true end
+	if btn(⬇️) then p.y+=1 saniply=true end
+	
+	--update sprite animation
+	if saniply then 
+		shipani() 
+	else
+		s=1
+	end
 	
 	--if character moves offscreen
 	wrap()
