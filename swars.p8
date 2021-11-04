@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 33
 __lua__
---variables
+--variables/init
 p={}
 p.x=5
 p.y=5
@@ -12,10 +12,15 @@ saniply=false --dont play animation when still
 
 --a list for the lasers in the game
 lasers = {}
+
+function _init()
+	new_ti(20,20)
+end
 -->8
 --draw
 function _draw()
 	cls()
+	draw_enemies()
 	for o in all(lasers) do o:draw() end
 	map()
 	spr(s,p.x,p.y)
@@ -61,15 +66,17 @@ function _update()
 	if btn(➡️) then p.x+=1 saniply=true end
 	if btn(⬆️) then p.y-=1 saniply=true end
 	if btn(⬇️) then p.y+=1 saniply=true end
-	if(btn(❎)) then createlas() end
+	if btn(❎) then createlas() end
 	
 	--update sprite animation
-	if saniply then 
-		shipani() 
-	else s=1 end
+	if saniply then shipani() else s=1 end
 	
-	--if character moves offscreen
+	--if anyone moves offscreen
 	wrap()
+	wrap_enemies()
+	
+	--update enemy ships
+	update_enemies()
 	
 	local i,j=1,1 --properly support deleting items
 	while(lasers[i]) do
@@ -109,6 +116,39 @@ function createlas()
 			newlaser(p.x,p.y,4,4,0,2)
 			starttimer()
 		end
+end
+-->8
+--enemies
+tis={}
+function new_ti(x,y)
+	local enship={}
+		enship.x=x
+		enship.y=y
+		enship.type="ti"
+		enship.spr=2
+		enship.hp=4
+	tis[#tis+1]=enship
+end
+
+function update_enemies()
+	for m in all(tis) do
+		m.x+=1
+	end
+end
+
+function draw_enemies()
+	for mob in all(tis) do
+		spr(mob.spr, mob.x, mob.y)
+	end
+end
+
+function wrap_enemies()
+	-- handle if enemy moves
+	-- offscreen
+	for m in all(tis) do
+		if m.x>127 then m.x=-8 end
+		if m.x<-8 then m.x=127 end
+	end
 end
 __gfx__
 0000000000000000d000000d00888800000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000
