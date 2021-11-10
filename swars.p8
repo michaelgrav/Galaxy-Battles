@@ -3,8 +3,8 @@ version 33
 __lua__
 --variables/init
 p={}
-p.x=5
-p.y=5
+p.x=62
+p.y=100
 lastimer = 0
 s=1 --sprite number
 d=4 --delay between sprite change
