@@ -5,7 +5,8 @@ __lua__
 p={}
 p.x=62
 p.y=100
-lastimer = 0
+p.hp=10
+lastimer=0
 s=1 --sprite number
 d=4 --delay between sprite change
 saniply=false --dont play animation when still
@@ -26,17 +27,9 @@ function _draw()
 	spr(s,p.x,p.y)
 end
 
---function for drawing objects
+--function for drawing lasers
 function laserdraw(o)
 	spr(o.spr,o.x,o.y)
-end
-
---moves bullest a little bit at a time
-function laserupdate(b)
-	b.x += b.dx --x moves by dx every frame
-	b.y -= b.dy --y moves by dy every frame
-	b.time -= 1 --if the laser has exsited for too long, delete it
-	return b.time > 0 --returns true if still alive
 end
 
 --creates a new laser
@@ -50,6 +43,25 @@ function newlaser(x,y,w,h,dx,dy)
 	}
 	add(lasers,b)
 	return b --if a laser is special we can adjust it
+end
+
+--creates a new laser
+function createlas()
+	if lastimer == 0 then
+			newlaser(p.x,p.y,4,4,0,2)
+			sfx(0)
+			starttimer()
+		end
+end
+
+function shipani()
+	--update sprite animation
+	d-=1
+	if d<0 then
+		s+=16
+		if s>49 then s=1 end
+		d=4
+	end
 end
 -->8
 --update
@@ -101,22 +113,12 @@ function wrap()
 	if p.y<-8 then p.y=127 end
 end
 
-function shipani()
-	--update sprite animation
-	d-=1
-	if d<0 then
-		s+=16
-		if s>49 then s=1 end
-		d=4
-	end
-end
-
-function createlas()
-	if lastimer == 0 then
-			newlaser(p.x,p.y,4,4,0,2)
-			sfx(0)
-			starttimer()
-		end
+--moves lasers a little bit at a time
+function laserupdate(b)
+	b.x += b.dx --x moves by dx every frame
+	b.y -= b.dy --y moves by dy every frame
+	b.time -= 1 --if the laser has exsited for too long, delete it
+	return b.time > 0 --returns true if still alive
 end
 -->8
 --enemies
@@ -127,16 +129,18 @@ function new_ti(x,y)
 		enship.y=y
 		enship.type="ti"
 		enship.spr=2
-		enship.hp=4
+		enship.hp=1
 	tis[#tis+1]=enship
 end
 
+--make the enemy move sideways
 function update_enemies()
 	for m in all(tis) do
 		m.x+=1
 	end
 end
 
+--draw each enemy to the screen
 function draw_enemies()
 	for mob in all(tis) do
 		spr(mob.spr, mob.x, mob.y)
