@@ -137,10 +137,10 @@ end
 function detect_collisions()
 	for ti in all(tis) do
 		if are_colliding(p, ti) then
-			_init()
+			_init() --if the player touches a ship
 		end
 		
-		for l in all(lasers) do
+		for l in all(lasers) do --if a laser hits a ship
 			if are_colliding(l,ti) then
 				del(lasers, l)
 				del(tis, ti)
@@ -151,8 +151,9 @@ end
 
 function are_colliding(obj, other)
 	if ((flr(obj.x/8) == flr(other.x/8)) and  (flr(obj.y/8)==flr(other.y/8))) then 
-		return true
+		return true --if the objects overlap on a tile
 	end
+	
 	return false
 end
 
