@@ -2,19 +2,24 @@ pico-8 cartridge // http://www.pico-8.com
 version 33
 __lua__
 --variables/init
+
+--player varaibles
 p={}
 p.x=62
 p.y=100
 p.hp=10
-lastimer=0
 s=1 --sprite number
 d=4 --delay between sprite change
 saniply=false --dont play animation when still
 
---a list for the lasers in the game
-lasers = {}
+--laser variables
+lastimer=0
+lasers = {} --a list for the lasers in the game
+
 
 function _init()
+	cls()
+	_draw()
 	new_ti(20,20)
 end
 -->8
@@ -98,8 +103,13 @@ function _update()
 		else lasers[i]=nil end --remove lasers that have died or timed out
 			i+=1 --go to the next object
 	end
-end
+	
+	detect_collisions()
+end --end of update
 
+
+
+--start the laser delay
 function starttimer()
  lastimer = 30
 end
@@ -120,6 +130,33 @@ function laserupdate(b)
 	b.time -= 1 --if the laser has exsited for too long, delete it
 	return b.time > 0 --returns true if still alive
 end
+
+
+
+--collision functions
+function detect_collisions()
+	for ti in all(tis) do
+		if are_colliding(p, ti) then
+			_init()
+		end
+		
+		for l in all(lasers) do
+			if are_colliding(l,ti) then
+				del(lasers, l)
+				del(tis, ti)
+			end
+		end
+	end
+end
+
+function are_colliding(obj, other)
+	if ((flr(obj.x/8) == flr(other.x/8)) and  (flr(obj.y/8)==flr(other.y/8))) then 
+		return true
+	end
+	return false
+end
+
+
 -->8
 --enemies
 tis={}
